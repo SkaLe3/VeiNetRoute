@@ -8,12 +8,12 @@
 
 #include <memory>
 
-namespace VeiM
+namespace VNR
 {
 	class Window;
 }
 
-namespace VeiM::UI
+namespace VNR::UI
 {
 	class TitleBar
 	{
@@ -57,11 +57,11 @@ namespace VeiM::UI
 		};
 
 	private:
-		std::shared_ptr<VeiM::Image> m_AppHeaderIcon;
-		std::shared_ptr<VeiM::Image> m_IconClose;
-		std::shared_ptr<VeiM::Image> m_IconMinimize;
-		std::shared_ptr<VeiM::Image> m_IconMaximize;
-		std::shared_ptr<VeiM::Image> m_IconRestore;
+		std::shared_ptr<VNR::Image> m_AppHeaderIcon;
+		std::shared_ptr<VNR::Image> m_IconClose;
+		std::shared_ptr<VNR::Image> m_IconMinimize;
+		std::shared_ptr<VNR::Image> m_IconMaximize;
+		std::shared_ptr<VNR::Image> m_IconRestore;
 	private:
 		std::function<void()> m_MenubarCallback;
 		Style m_Style;

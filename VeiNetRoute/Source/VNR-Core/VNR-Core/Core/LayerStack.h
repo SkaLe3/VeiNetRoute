@@ -2,7 +2,7 @@
 #include "Layer.h"
 #include <vector>
 
-namespace VeiM
+namespace VNR
 {
 	class LayerStack
 	{

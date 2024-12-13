@@ -10,7 +10,7 @@
 #include <chrono>
 #include <thread>
 
-namespace VeiM
+namespace VNR
 {
 	GUIContext::GUIContext()
 		:Layer("ImGuiLayer")
@@ -37,6 +37,7 @@ namespace VeiM
 		float fontSize = 16.0f;
 		String fontPath = Application::Get().GetEngineResourcePath().string() + "/UI/Fonts/";
 		io.Fonts->AddFontFromFileTTF((fontPath + "Roboto/Roboto-Bold.ttf").c_str(), fontSize);
+		io.Fonts->AddFontFromFileTTF((fontPath + "Roboto/Roboto-Regular.ttf").c_str(), fontSize * 4.f);
 		io.Fonts->AddFontFromFileTTF((fontPath + "Roboto/Roboto-Black.ttf").c_str(), fontSize);
 		io.Fonts->AddFontFromFileTTF((fontPath + "Roboto/Roboto-BlackItalic.ttf").c_str(), fontSize);
 		io.Fonts->AddFontFromFileTTF((fontPath + "Roboto/Roboto-BoldItalic.ttf").c_str(), fontSize);
@@ -108,12 +109,12 @@ namespace VeiM
 
 	void GUIContext::EnableDocking(Window& window)
 	{
-		
+
 	}
 
 	void GUIContext::RenderDockspace()
 	{
-		
+
 
 	}
 

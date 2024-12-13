@@ -38,7 +38,7 @@
 #include <filesystem>
 #include <cstdint>
 
-namespace VeiM
+namespace VNR
 {
 	using byte = uint8_t;
 	using int8 = int8_t;
@@ -55,17 +55,17 @@ namespace VeiM
 	using String = ::std::string;
 
    template<typename T>
-   using Scope = std::unique_ptr<T>;
+   using UniquePtr = std::unique_ptr<T>;
    template<typename T, typename ... Args>
-   constexpr Scope<T> CreateScope(Args&& ... args)
+   constexpr UniquePtr<T> CreateScope(Args&& ... args)
    {
 	   return std::make_unique<T>(std::forward<Args>(args)...);
    }
 
    template<typename T>
-   using Ref = std::shared_ptr<T>;
+   using SharedPtr = std::shared_ptr<T>;
    template<typename T, typename ... Args>
-   constexpr Ref<T> CreateRef(Args&& ... args)
+   constexpr SharedPtr<T> CreateRef(Args&& ... args)
    {
 	   return std::make_shared<T>(std::forward<Args>(args)...);
    }

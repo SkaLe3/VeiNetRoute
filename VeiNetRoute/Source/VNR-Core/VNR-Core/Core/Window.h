@@ -9,7 +9,7 @@
 struct GLFWwindow;
 
 
-namespace VeiM
+namespace VNR
 {
 	static uint8 s_WindowCount = 0;
 
@@ -41,7 +41,7 @@ namespace VeiM
 	// Window creation configuration
 	struct WindowConfig
 	{
-		std::string Title = "VeiM Engine";
+		std::string Title = "VeiNetRoute";
 		uint32_t Width = 1280;
 		uint32_t Height = 720;
 		bool VSync = true;
@@ -103,7 +103,7 @@ namespace VeiM
 	private:
 		struct WindowData
 		{
-			std::string Title = "VeiM Engine";
+			std::string Title = "VeiNetRoute";
 			uint32_t Width = 1280;
 			uint32_t Height = 720;
 			bool VSync = true;

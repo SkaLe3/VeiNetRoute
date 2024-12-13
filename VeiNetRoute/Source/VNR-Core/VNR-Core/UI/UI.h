@@ -11,7 +11,7 @@
 #include "VNR-Core/Core/CoreDefines.h"
 
 
-namespace VeiM::UI
+namespace VNR::UI
 {
 	namespace Colors
 	{
@@ -113,26 +113,26 @@ namespace VeiM::UI
 	ImRect RectOffset(const ImRect& rect, float x, float y);
 	ImRect RectOffset(const ImRect& rect, ImVec2 xy);
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& imageNormal, const std::shared_ptr<VeiM::Image>& imageHovered, const std::shared_ptr<VeiM::Image>& imagePressed,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& imageNormal, const std::shared_ptr<VNR::Image>& imageHovered, const std::shared_ptr<VNR::Image>& imagePressed,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed,
 						 ImVec2 rectMin, ImVec2 rectMax);
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& imageNormal, const std::shared_ptr<VeiM::Image>& imageHovered, const std::shared_ptr<VeiM::Image>& imagePressed,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& imageNormal, const std::shared_ptr<VNR::Image>& imageHovered, const std::shared_ptr<VNR::Image>& imagePressed,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed,
 						 ImRect rectangle);
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& image,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& image,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed,
 						 ImVec2 rectMin, ImVec2 rectMax);
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& image,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& image,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed,
 						 ImRect rectangle);
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& imageNormal, const std::shared_ptr<VeiM::Image>& imageHovered, const std::shared_ptr<VeiM::Image>& imagePressed,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& imageNormal, const std::shared_ptr<VNR::Image>& imageHovered, const std::shared_ptr<VNR::Image>& imagePressed,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed);
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& image,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& image,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed);
 
 	void RenderWindowOuterBorders(ImGuiWindow* window);

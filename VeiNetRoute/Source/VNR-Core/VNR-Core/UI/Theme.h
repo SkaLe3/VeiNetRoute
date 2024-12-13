@@ -11,7 +11,7 @@ namespace YAML
 {
 	class Node;
 }
-namespace VeiM::UI
+namespace VNR::UI
 {
 
 	struct EditorPalette

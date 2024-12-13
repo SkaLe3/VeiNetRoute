@@ -4,8 +4,9 @@
 #include "VNR-Core/UI/Theme.h" 
 
 #include <iostream> // TODO: remove
+#include <cstdlib> 
 
-namespace VeiM
+namespace VNR
 {
 	EditorLayer::EditorLayer() : Layer("EditorLayer")
 	{
@@ -14,11 +15,10 @@ namespace VeiM
 
 	void EditorLayer::OnAttach()
 	{
-
 		Application::Get().GetWindow().SetTitlebarHitTestCallback([this]() { return m_TitleBar->IsHovered(); });
 
 
-		m_TitleBar = std::make_shared<UI::TitleBar>("VeiM Engine");
+		m_TitleBar = std::make_shared<UI::TitleBar>("VeiNetRoute Simulator");
 		m_TitleBar->SetMenubarCallback([this]()
 									   {
 										   UI::ShiftCursorY(2);
@@ -100,12 +100,12 @@ namespace VeiM
 											   ImGui::PopStyleVar();
 											   if (ImGui::MenuItem("About", NULL, false))
 											   {
-
+												   system("start https://youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley");
 											   }
 
 											   if (ImGui::MenuItem("Github", NULL, false))
 											   {
-
+												   system("start https://github.com/SkaLe3/VeiNetRoute	");
 											   }
 											   ImGui::EndMenu();
 										   }
@@ -183,9 +183,7 @@ namespace VeiM
 		}
 		ImGui::End();
 
-		ImGui::Begin("Graph Editor");
-		ImGui::Button("Button");
-		ImGui::End();
+		
 
 	}
 

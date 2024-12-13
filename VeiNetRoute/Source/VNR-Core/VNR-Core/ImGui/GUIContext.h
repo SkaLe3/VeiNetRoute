@@ -5,7 +5,7 @@
 
 #include "VNR-Core/UI/Theme.h"
 
-namespace VeiM
+namespace VNR
 {
 	struct GUIDebug
 	{

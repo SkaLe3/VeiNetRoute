@@ -1,6 +1,6 @@
 #include "UI.h"
 
-namespace VeiM::UI
+namespace VNR::UI
 {
 	void ShiftCursorX(float distance)
 	{
@@ -48,7 +48,7 @@ namespace VeiM::UI
 		return RectOffset(rect, xy.x, xy.y);
 	}
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& imageNormal, const std::shared_ptr<VeiM::Image>& imageHovered, const std::shared_ptr<VeiM::Image>& imagePressed,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& imageNormal, const std::shared_ptr<VNR::Image>& imageHovered, const std::shared_ptr<VNR::Image>& imagePressed,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed,
 						 ImVec2 rectMin, ImVec2 rectMax)
 	{
@@ -61,21 +61,21 @@ namespace VeiM::UI
 			drawList->AddImage((void*)imagePressed->GetData(), rectMin, rectMax, ImVec2(0, 0), ImVec2(1, 1), tintNormal);
 	};
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& imageNormal, const std::shared_ptr<VeiM::Image>& imageHovered, const std::shared_ptr<VeiM::Image>& imagePressed,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& imageNormal, const std::shared_ptr<VNR::Image>& imageHovered, const std::shared_ptr<VNR::Image>& imagePressed,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed,
 						 ImRect rectangle)
 	{
 		DrawButtonImage(imageNormal, imageHovered, imagePressed, tintNormal, tintHovered, tintPressed, rectangle.Min, rectangle.Max);
 	};
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& image,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& image,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed,
 						 ImVec2 rectMin, ImVec2 rectMax)
 	{
 		DrawButtonImage(image, image, image, tintNormal, tintHovered, tintPressed, rectMin, rectMax);
 	};
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& image,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& image,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed,
 						 ImRect rectangle)
 	{
@@ -83,13 +83,13 @@ namespace VeiM::UI
 	};
 
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& imageNormal, const std::shared_ptr<VeiM::Image>& imageHovered, const std::shared_ptr<VeiM::Image>& imagePressed,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& imageNormal, const std::shared_ptr<VNR::Image>& imageHovered, const std::shared_ptr<VNR::Image>& imagePressed,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed)
 	{
 		DrawButtonImage(imageNormal, imageHovered, imagePressed, tintNormal, tintHovered, tintPressed, ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
 	};
 
-	void DrawButtonImage(const std::shared_ptr<VeiM::Image>& image,
+	void DrawButtonImage(const std::shared_ptr<VNR::Image>& image,
 						 ImU32 tintNormal, ImU32 tintHovered, ImU32 tintPressed)
 	{
 		DrawButtonImage(image, image, image, tintNormal, tintHovered, tintPressed, ImGui::GetItemRectMin(), ImGui::GetItemRectMax());

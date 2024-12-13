@@ -1,7 +1,7 @@
 #include "WindowsUtils.h"
 #include <GLFW/glfw3.h>
 
-namespace VeiM
+namespace VNR
 {
 	float Time::GetTime()
 	{

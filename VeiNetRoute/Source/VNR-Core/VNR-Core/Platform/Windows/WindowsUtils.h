@@ -1,6 +1,6 @@
 #pragma once
 
-namespace VeiM
+namespace VNR
 {
 	class Time
 	{

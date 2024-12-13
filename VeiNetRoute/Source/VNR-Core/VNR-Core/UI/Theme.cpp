@@ -60,7 +60,7 @@ namespace YAML
 	};
 }
 
-namespace VeiM::UI
+namespace VNR::UI
 {
 	Theme Theme::m_SavedTheme;
 	std::unordered_map<String, YAML::Node> Theme::m_Themes;

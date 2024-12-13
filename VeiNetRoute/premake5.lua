@@ -8,6 +8,7 @@ workspace "VeiNetRoute"
 	configurations { "Debug", "Shipping" }
 	platforms {"Win64"}
 	buildoptions { "/MP" }
+    buildoptions { "/utf-8" }
 
 	location "..\\"
 	

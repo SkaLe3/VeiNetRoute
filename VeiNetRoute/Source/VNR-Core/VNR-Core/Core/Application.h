@@ -15,12 +15,12 @@
 
 struct GLFWwindow;
 
-namespace VeiM
+namespace VNR
 {
 
 	struct ApplicationConfig
 	{
-		std::string Name = "VeiM Engine";
+		std::string Name = "VeiNetRoute";
 		bool EnableConsole = true;
 		std::filesystem::path WorkingDirectory;
 		std::filesystem::path EngineContentPath;
@@ -53,7 +53,7 @@ namespace VeiM
 		inline float GetDeltaTime() { return m_DeltaTime; }
 		Window& GetWindow() const { return *m_Window; }
 
-		VeiM::GUIContext* GetGUIContext() { return m_GUIContext; }
+		VNR::GUIContext* GetGUIContext() { return m_GUIContext; }
 	private: 
 		void InitGUI();
 		void RenderGUI();
@@ -64,7 +64,7 @@ namespace VeiM
 		void OnEvent(const std::string& inf);
 	private:
 
-		VeiM::GUIContext* m_GUIContext;
+		VNR::GUIContext* m_GUIContext;
 
 	private:
 		ApplicationConfig m_Config;

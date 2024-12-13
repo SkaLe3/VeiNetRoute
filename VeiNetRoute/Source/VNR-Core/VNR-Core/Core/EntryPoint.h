@@ -2,17 +2,17 @@
 #include "Application.h"
 #include "VNR-Core/IO/Log.h"
 
-extern VeiM::Application* VeiM::CreateApplication(int argc, char** argv);
+extern VNR::Application* VNR::CreateApplication(int argc, char** argv);
 bool g_ApplicationRunning = true;
 
-namespace VeiM
+namespace VNR
 {
 	int Main(int argc, char** argv)
 	{
 		Log::Init();
 		while (g_ApplicationRunning)
 		{
-			VeiM::Application* app = VeiM::CreateApplication(argc, argv);
+			VNR::Application* app = VNR::CreateApplication(argc, argv);
 			app->Run();
 			delete app;
 		}
@@ -25,14 +25,14 @@ namespace VeiM
 
 int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
 {
-	return VeiM::Main(__argc, __argv);
+	return VNR::Main(__argc, __argv);
 }
 
 #else
 
 int main(int argc, char** argv)
 {
-	return VeiM::Main(argc, argv);
+	return VNR::Main(argc, argv);
 }
 
 #endif // VNR_DIST

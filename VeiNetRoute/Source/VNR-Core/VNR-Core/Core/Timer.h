@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-namespace VeiM
+namespace VNR
 {
 	class Timer
 	{

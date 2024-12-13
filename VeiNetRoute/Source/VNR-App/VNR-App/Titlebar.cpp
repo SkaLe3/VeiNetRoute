@@ -9,7 +9,7 @@
 #include <imgui_internal.h>
 #include <GLFW/glfw3.h>
 
-namespace VeiM::UI
+namespace VNR::UI
 {
 #include "Utils/Embed/VeiM-Icon.embed"
 #include "Utils/Embed/WindowIcons.embed"
@@ -19,35 +19,35 @@ namespace VeiM::UI
 		{
 			uint32_t w, h;
 			void* data = Image::Decode(g_VeiMIcon, sizeof(g_VeiMIcon), w, h);
-			m_AppHeaderIcon = std::make_shared<VeiM::Image>(w, h, ImageFormat::RGBA);
+			m_AppHeaderIcon = std::make_shared<VNR::Image>(w, h, ImageFormat::RGBA);
 			m_AppHeaderIcon->SetData(data);
 			free(data);
 		}
 		{
 			uint32_t w, h;
 			void* data = Image::Decode(g_WindowMinimizeIcon, sizeof(g_WindowMinimizeIcon), w, h);
-			m_IconMinimize = std::make_shared<VeiM::Image>(w, h, ImageFormat::RGBA);
+			m_IconMinimize = std::make_shared<VNR::Image>(w, h, ImageFormat::RGBA);
 			m_IconMinimize->SetData(data);
 			free(data);
 		}
 		{
 			uint32_t w, h;
 			void* data = Image::Decode(g_WindowMaximizeIcon, sizeof(g_WindowMaximizeIcon), w, h);
-			m_IconMaximize = std::make_shared<VeiM::Image>(w, h, ImageFormat::RGBA);
+			m_IconMaximize = std::make_shared<VNR::Image>(w, h, ImageFormat::RGBA);
 			m_IconMaximize->SetData(data);
 			free(data);
 		}
 		{
 			uint32_t w, h;
 			void* data = Image::Decode(g_WindowRestoreIcon, sizeof(g_WindowRestoreIcon), w, h);
-			m_IconRestore = std::make_shared<VeiM::Image>(w, h, ImageFormat::RGBA);
+			m_IconRestore = std::make_shared<VNR::Image>(w, h, ImageFormat::RGBA);
 			m_IconRestore->SetData(data);
 			free(data);
 		}
 		{
 			uint32_t w, h;
 			void* data = Image::Decode(g_WindowCloseIcon, sizeof(g_WindowCloseIcon), w, h);
-			m_IconClose = std::make_shared<VeiM::Image>(w, h, ImageFormat::RGBA);
+			m_IconClose = std::make_shared<VNR::Image>(w, h, ImageFormat::RGBA);
 			m_IconClose->SetData(data);
 			free(data);
 		}

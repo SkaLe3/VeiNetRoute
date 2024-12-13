@@ -3,24 +3,24 @@
 
 
 
-VeiM::LayerStack::~LayerStack()
+VNR::LayerStack::~LayerStack()
 {
 	Clear();
 }
 
-void VeiM::LayerStack::PushLayer(Layer* layer)
+void VNR::LayerStack::PushLayer(Layer* layer)
 {
 
 	m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
 	m_LayerInsertIndex++;
 }
 
-void VeiM::LayerStack::PushOverlay(Layer* overlay)
+void VNR::LayerStack::PushOverlay(Layer* overlay)
 {
 	m_Layers.emplace_back(overlay);
 }
 
-void VeiM::LayerStack::PopLayer(Layer* layer)
+void VNR::LayerStack::PopLayer(Layer* layer)
 {
 	auto it = std::find(m_Layers.begin(), m_Layers.begin() + m_LayerInsertIndex, layer);
 	if (it != m_Layers.begin() + m_LayerInsertIndex)
@@ -35,7 +35,7 @@ void VeiM::LayerStack::PopLayer(Layer* layer)
 	}
 }
 
-void VeiM::LayerStack::PopOverlay(Layer* overlay)
+void VNR::LayerStack::PopOverlay(Layer* overlay)
 {
 	auto it = std::find(m_Layers.begin() + m_LayerInsertIndex, m_Layers.end(), overlay);
 	if (it != m_Layers.end())
@@ -49,7 +49,7 @@ void VeiM::LayerStack::PopOverlay(Layer* overlay)
 	}
 }
 
-void VeiM::LayerStack::Clear()
+void VNR::LayerStack::Clear()
 {
 	for (Layer* layer : m_Layers)
 	{

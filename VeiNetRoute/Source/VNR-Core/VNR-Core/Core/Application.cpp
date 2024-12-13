@@ -13,7 +13,7 @@
 
 extern bool g_ApplicationRunning;
 
-namespace VeiM
+namespace VNR
 {
 	Application* Application::s_Instance = nullptr;
 	Application::Application(const ApplicationSpecification& applicationSpecification)
@@ -27,7 +27,7 @@ namespace VeiM
 
 
 
-		m_Window = std::make_unique<Window>(applicationSpecification.WndConfig);  // TODO: Make static function Create() or another
+		m_Window = std::make_unique<Window>(applicationSpecification.WndConfig);  // TODO: Make static function Create() or smth
 		m_Window->SetEventCallback([this](const std::string& inf) { Application::OnEvent(inf); });
 		InitGUI();
 	}

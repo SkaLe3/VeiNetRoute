@@ -4,7 +4,7 @@
 
 
 // TODO: Move to Editor project
-namespace VeiM
+namespace VNR
 {
 
 	enum class ImageFormat

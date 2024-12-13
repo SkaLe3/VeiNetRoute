@@ -1,2 +1,2 @@
 #pragma once
-#define IDICON_VMGame 123
+#define IDICON_VNR 123

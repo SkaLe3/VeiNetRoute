@@ -3,7 +3,7 @@
 #include "Titlebar.h"
 #include "EditorWindows.h"
 
-namespace VeiM
+namespace VNR
 {
 	class EditorLayer : public Layer
 	{
