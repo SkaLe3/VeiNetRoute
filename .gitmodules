@@ -1,0 +1,15 @@
+[submodule "VeiNetRoute/ThirdParty/imgui"]
+	path = VeiNetRoute/ThirdParty/imgui
+	url = https://github.com/SkaLe3/imgui
+[submodule "VeiNetRoute/ThirdParty/GLFW"]
+	path = VeiNetRoute/ThirdParty/GLFW
+	url = https://github.com/SkaLe3/glfw
+[submodule "VeiNetRoute/ThirdParty/glm"]
+	path = VeiNetRoute/ThirdParty/glm
+	url = https://github.com/g-truc/glm
+[submodule "VeiNetRoute/ThirdParty/spdlog"]
+	path = VeiNetRoute/ThirdParty/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "VeiNetRoute/ThirdParty/yaml-cpp"]
+	path = VeiNetRoute/ThirdParty/yaml-cpp
+	url = https://github.com/SkaLe3/yaml-cpp
