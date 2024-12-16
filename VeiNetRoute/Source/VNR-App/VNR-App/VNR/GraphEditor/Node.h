@@ -4,11 +4,14 @@
 
 namespace VNR
 {
+	struct NetworkNode;
+
 	struct Node
 	{
+		NetworkNode* Data;
+
 		ImVec2 Position;
 		float Radius;
-		uint32_t ID;
 		bool bSelected = false;
 		bool bDragging = false;
 		ImVec2 DragOffset = {0.f, 0.f};
@@ -22,6 +25,6 @@ namespace VNR
 		float m_OutlineThickness = 4.0f;
 		float m_OutlineThicknessSelected = 8.f;
 
-		Node(ImVec2 pos, float r, uint32_t id) : Position(pos), Radius(r), ID(id){}
+		Node(NetworkNode* data) : Position({0.f, 0.f}), Radius(30.f), Data(data) {}
 	};
 }

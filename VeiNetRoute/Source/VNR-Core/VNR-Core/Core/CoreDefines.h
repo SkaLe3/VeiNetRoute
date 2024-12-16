@@ -17,7 +17,33 @@
 
 #define VNR_BIND_EVENT(fn) [this](auto&&... args) -> decltype(auto) {return this->fn(std::forward<decltype(args)>(args)...);}
 
+#include <vector>
+#include <functional>
 
+#define DECLARE_DELEGATE_ONE_PARAM(name, P1TYPE)										 \
+struct name																				 \
+{																						 \
+public:																					 \
+	void Add(std::function<void(P1TYPE)> callback) {callbacks.push_back(callback);}		 \
+	void Broadcast(P1TYPE p1)															 \
+	{																					 \
+		for (auto& func : callbacks)													 \
+		{																				 \
+			func(p1);																	 \
+		}																				 \
+	}																					 \
+	void Invoke(P1TYPE p1)																 \
+	{																					 \
+		Broadcast(p1);																	 \
+		Clear();																		 \
+	}																					 \
+	void Clear()																		 \
+	{																					 \
+		callbacks.clear();																 \
+	}																					 \
+private:																				 \
+	std::vector<std::function<void(P1TYPE)>> callbacks;									 \
+};																						 
 #ifdef VNR_ENABLE_ASSERTS
 	#define VNR_INTERNAL_ASSERT_IMPL(type, check, msg, ...) {if(!(check)) { VNR##type##ERROR(msg, __VA_ARGS__); VNR_DEBUGBREAK();}}
 	#define VNR_INTERNAL_ASSERT_WITH_MSG(type, check, ...) VNR_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {0}", __VA_ARGS__)
@@ -57,7 +83,7 @@ namespace VNR
    template<typename T>
    using UniquePtr = std::unique_ptr<T>;
    template<typename T, typename ... Args>
-   constexpr UniquePtr<T> CreateScope(Args&& ... args)
+   constexpr UniquePtr<T> MakeUnique(Args&& ... args)
    {
 	   return std::make_unique<T>(std::forward<Args>(args)...);
    }
@@ -65,7 +91,7 @@ namespace VNR
    template<typename T>
    using SharedPtr = std::shared_ptr<T>;
    template<typename T, typename ... Args>
-   constexpr SharedPtr<T> CreateRef(Args&& ... args)
+   constexpr SharedPtr<T> MakeShared(Args&& ... args)
    {
 	   return std::make_shared<T>(std::forward<Args>(args)...);
    }

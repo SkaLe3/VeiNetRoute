@@ -29,7 +29,7 @@ namespace VNR
 											   ImGui::PopStyleVar();
 											   if (ImGui::MenuItem("New", "Ctrl+N", false))
 											   {
-												   int32_t dummy = 2;
+												   int32 dummy = 2;
 											   }
 											   if (ImGui::MenuItem("Open...", "Ctrl+O", false))
 											   {
@@ -56,7 +56,7 @@ namespace VNR
 											   ImGui::PopStyleVar();
 											   if (ImGui::MenuItem("Undo", "Ctrl+Z", false))
 											   {
-												   int32_t dummy = 2;
+												   int32 dummy = 2;
 											   }
 											   if (ImGui::MenuItem("Redo", "Ctrl+Y", false))
 											   {
