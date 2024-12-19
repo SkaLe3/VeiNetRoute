@@ -15,12 +15,8 @@ namespace VNR
 		Node* Node1;
 		Node* Node2;
 
-		ImU32 Color = ColorTypes[0];
-		ImU32 TextColor = IM_COL32(255, 255, 255, 200);
-
-		inline static ImU32 ColorTypes[3] = {IM_COL32(255, 255, 255, 200),
-								IM_COL32(230, 230, 40, 200),
-								IM_COL32(230, 40, 40, 200)};
+		inline static constexpr ImU32 TextColor = IM_COL32(255, 255, 255, 200);
+		inline static constexpr ImU32 DisabledColor = IM_COL32(200, 200, 200, 200);
 
 		float Thickness = 4.f;
 

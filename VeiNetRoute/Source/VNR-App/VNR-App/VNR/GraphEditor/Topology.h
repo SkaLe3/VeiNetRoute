@@ -1,5 +1,7 @@
 #pragma once
 #include "VNR-Core/Core/CoreDefines.h"
+#include "VNR-App/VNR/Network/TopologyData.h"
+
 #include <vector>
 
 
@@ -7,15 +9,6 @@
 
 namespace VNR
 {
-	// TODO: Separate TopologyData and TopologySettings to different files
-	struct TopologyData
-	{
-		std::vector<int32> Weights;
-		int32 RegionalNetworks = 0;
-		int32 NodesInNetwork = 0;
-		int32 AVGNetworkDegree = 0;
-	};
-
 	DECLARE_DELEGATE_ONE_PARAM(GenerateGraphDelegate, TopologyData)
 
 
@@ -23,20 +16,18 @@ namespace VNR
 	{
 	public:
 		TopologySettigs();
-		
-		void InitTopologyData(TopologyData data);				   
+
+		void InitTopologyData(TopologyData data);
 		TopologyData GetTopologyData() const;
 
 		void InitWeights(const std::vector<int32>& weights);
-		void InitRegionalNetworks(uint32 regionalNetworks);
-		void InitNodesInNetwork(uint32 nodes);
+		void InitRegionalNetworks(const std::vector<int32>& regionalNetworks);
 		void InitAVGNetworkDegree(float degree);
 
 		std::vector<int32> GetWeights() const;
-		int32 GetRegionalNetworks() const;
-		int32 GetNodesInNetwork() const;
+		std::vector<int32> GetRegionalNetworks() const;
 		float GetAVGNetworkDegree() const;
-		
+
 
 		void Draw();
 		void WeightsSection();
@@ -47,6 +38,6 @@ namespace VNR
 
 	private:
 		TopologyData m_TopologyData;
-		float m_AVGNetworkDegree; 
+		float m_AVGNetworkDegree;
 	};
 }

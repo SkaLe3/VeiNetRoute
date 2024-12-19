@@ -8,20 +8,20 @@ namespace VNR
 {
 	struct Node;
 
-	enum class ENodeType
+	struct NetworkNodeData
 	{
-		Type1, Type2, Disabled
+		int32 ID = -1;
+		bool bEnabled = true;
 	};
-
 
 	struct NetworkNode
 	{
 		uint32 ID;
-		ENodeType Type;
-		std::vector<Channel*> Channels; 
+		bool bEnabled;
+		std::vector<Channel*> Channels;
 
 		Node* Visuals;
 
-		NetworkNode(uint32 id, ENodeType type) : ID(id), Type(type)	{}
+		NetworkNode(uint32 id, bool status) : ID(id), bEnabled(status) {}
 	};
 }

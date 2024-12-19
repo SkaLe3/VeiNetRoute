@@ -17,6 +17,8 @@
 
 #define VNR_BIND_EVENT(fn) [this](auto&&... args) -> decltype(auto) {return this->fn(std::forward<decltype(args)>(args)...);}
 
+#define MAX_LOOP_ITERATIONS 10000
+
 #include <vector>
 #include <functional>
 
@@ -43,7 +45,10 @@ public:																					 \
 	}																					 \
 private:																				 \
 	std::vector<std::function<void(P1TYPE)>> callbacks;									 \
-};																						 
+};	
+
+
+
 #ifdef VNR_ENABLE_ASSERTS
 	#define VNR_INTERNAL_ASSERT_IMPL(type, check, msg, ...) {if(!(check)) { VNR##type##ERROR(msg, __VA_ARGS__); VNR_DEBUGBREAK();}}
 	#define VNR_INTERNAL_ASSERT_WITH_MSG(type, check, ...) VNR_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {0}", __VA_ARGS__)
@@ -96,4 +101,10 @@ namespace VNR
 	   return std::make_shared<T>(std::forward<Args>(args)...);
    }
 }
+
+#define ENUM_CLASS_CONVERSIONS(EnumType)          \
+    constexpr int operator+(EnumType e) { return static_cast<uint8>(e); } \
+	constexpr EnumType To##EnumType(int i) { return static_cast<EnumType>(i); }
+
+
 #include "VNR-Core/IO/Log.h"
