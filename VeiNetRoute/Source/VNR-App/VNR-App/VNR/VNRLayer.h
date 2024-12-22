@@ -4,6 +4,7 @@
 #include "VNR-App/VNR/GraphEditor/Properties.h"
 #include "VNR-App/VNR/GraphEditor/NetworkManager.h"
 #include "VNR-App/VNR/GraphEditor/Topology.h"
+#include "VNR-App/VNR/GraphEditor/Simulation.h"
 #include "VNR-App/VNR/Network/Network.h"
 
 #include <imgui.h>
@@ -45,6 +46,7 @@ namespace VNR
 		TopologySettigs m_Topology;
 		Properties m_Properties;
 		NetworkManager m_NetworkManager;
+		Simulation m_Simulation;
 
 	};
 }

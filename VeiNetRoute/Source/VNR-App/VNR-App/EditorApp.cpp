@@ -25,7 +25,7 @@ namespace VNR
 		ApplicationSpecification specs;
 
 		specs.AppConfig.Name = "VeiNetRoute Simulator";
-		specs.AppConfig.EnableConsole = true; // TODO: Add option to enable console in game shipping build, or to choose it instead of editor console in debug and development editor build
+		specs.AppConfig.EnableConsole = true; 
 		specs.AppConfig.WorkingDirectory = std::filesystem::current_path().string() +  "/../../";
 		specs.AppConfig.EngineContentPath = "Content/";
 

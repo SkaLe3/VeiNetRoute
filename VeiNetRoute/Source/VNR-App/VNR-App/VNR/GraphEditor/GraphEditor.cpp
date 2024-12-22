@@ -269,7 +269,7 @@ namespace VNR
 		float thickness = m_Canvas.ApplyScale(edge->Thickness);
 
 		ImU32 edgeColor = EdgeColors[edge->Data->Type];
-		if (!edge->Data->Node1->bEnabled || !edge->Data->Node2->bEnabled)
+		if (!edge->Data->Node1->bEnabled || !edge->Data->Node2->bEnabled || !edge->Data->bEnabled)
 		{
 			edgeColor = Edge::DisabledColor;
 		}
@@ -296,7 +296,7 @@ namespace VNR
 		srand(static_cast<unsigned int>(time(nullptr))); // Seed with current time
 
 		const float k = 120.0f;       // Ideal distance between nodes
-		const float damping = 0.9f; // Damping factor to reduce oscillations
+		const float damping = 0.8f; // Damping factor to reduce oscillations
 		const float maxForce = 150.0f; // Maximum allowable force per iteration
 		const int maxIterations = 1000; // Maximum number of iterations
 

@@ -5,6 +5,7 @@
 #include "VNR-App/VNR/Network/Channel.h"
 
 #include <vector>
+#include <random>
 
 namespace VNR
 {
@@ -21,6 +22,7 @@ namespace VNR
 
 
 		TopologyData GetTopology() const;
+
 
 	public:
 		std::vector<UniquePtr<NetworkNode>> Nodes;

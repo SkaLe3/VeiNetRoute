@@ -1,4 +1,5 @@
 #include "Topology.h"
+#include "VNR-App/Utils/Math/MathHelpers.h"
 
 #include <imgui.h>
 #include <algorithm>
@@ -60,6 +61,7 @@ namespace VNR
 		WeightsSection();
 		NodesSection();
 		NetworkDegreeSection();
+		ErrorSection();
 
 		ImGui::Separator();
 		ImGui::Spacing();
@@ -88,11 +90,15 @@ namespace VNR
 		ImGui::PopFont();
 
 		ImGui::Spacing();
-		float windowWidth = ImGui::GetContentRegionAvail().x;
+		float windowWidth = ImGui::GetContentRegionAvail().x - 80;
 		if (ImGui::Button("Add Weight", ImVec2(windowWidth, 0)))
 		{
 			m_TopologyData.Weights.push_back(0);
 		}
+		ImGui::SameLine();
+
+		ImGui::Checkbox("Random", &m_TopologyData.bRandomWeights);
+		
 		ImGui::Spacing();
 		int32 removeIndex = -1;
 		for (size_t i = 0; i < m_TopologyData.Weights.size(); i++)
@@ -179,6 +185,30 @@ namespace VNR
 		}
 		ImGui::PopItemWidth();
 		ImGui::Spacing();
+	}
+
+	void TopologySettigs::ErrorSection()
+	{
+		ImFont* customFont = ImGui::GetIO().Fonts->Fonts[0];
+		ImGui::PushFont(customFont);
+		if (!ImGui::CollapsingHeader("Error"))
+		{
+			ImGui::PopFont();
+			return;
+		}
+		ImGui::PopFont();
+		
+		ImVec2 sliderSize =  ImGui::GetContentRegionAvail() - ImGui::CalcTextSize("Error Probability");
+		ImGui::PushItemWidth(sliderSize.x);
+
+		if (ImGui::SliderInt2("Error Probability", m_TopologyData.ErrorRange, 0, 100, "%d%%"))
+		{
+			if (m_TopologyData.ErrorRange[0] > m_TopologyData.ErrorRange[1])
+			{
+				std::swap(m_TopologyData.ErrorRange[0], m_TopologyData.ErrorRange[1]);
+			}
+		}
+		ImGui::PopItemWidth();
 	}
 
 }

@@ -16,12 +16,12 @@ namespace VNR
 		void ImGuiWindowsRender();
 
 	public:
-		void ThemeEditorRender(); // TODO: Move somewhere
+		void ThemeEditorRender();
 
 
 	private:
 		std::shared_ptr<UI::TitleBar> m_TitleBar;
-		float m_WindowBorderSize = 1.0f; // TODO: Put in private struct called EditorStyle or something similar
+		float m_WindowBorderSize = 1.0f;
 		float m_MinWinSizeX = 100.0f;
 		bool show_demo_window = false;
 		bool show_another_window = false;

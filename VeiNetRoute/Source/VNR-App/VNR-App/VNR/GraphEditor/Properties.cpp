@@ -77,11 +77,11 @@ namespace VNR
 		int32 headerOffset = ImGui::GetCursorPosX();
 		ImGui::SetCursorPosX(headerOffset + 2);
 		ImGui::Text("To Node"); ImGui::SameLine();
-		ImGui::SetCursorPosX(headerOffset + 72);
+		ImGui::SetCursorPosX(headerOffset + 84);
 		ImGui::Text("Type"); ImGui::SameLine();
-		ImGui::SetCursorPosX(headerOffset + 180);
+		ImGui::SetCursorPosX(headerOffset + 192);
 		ImGui::Text("Weight"); ImGui::SameLine();
-		ImGui::SetCursorPosX(headerOffset + 288);
+		ImGui::SetCursorPosX(headerOffset + 300);
 		ImGui::Text("Error Probability");
 		ImGui::Spacing();
 		ImGui::PopFont();
@@ -96,12 +96,14 @@ namespace VNR
 			int32 connectedIDtext = connectedID;
 
 			// Display "To Node" and connection details
+			ImGui::Checkbox(("##Enabled" + std::to_string(connectedID)).c_str(), &channel->bEnabled);
+			ImGui::SameLine();
 			PrettyInt("##ToNode", &connectedIDtext, 30);
 			ImGui::SameLine();
-			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 1);
 			ImGui::Text(":");
 			ImGui::SameLine();
-			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 1);
 
 			// Combo box for channel type
 			int itemSelectedIdx = +(channel->Type);

@@ -33,6 +33,7 @@ namespace VNR
 		void WeightsSection();
 		void NodesSection();
 		void NetworkDegreeSection();
+		void ErrorSection();
 	public:
 		GenerateGraphDelegate OnGenerate;
 

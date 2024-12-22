@@ -111,8 +111,7 @@ namespace VNR
 	{
 		ImGui::Begin("Simulation");
 
-		ImGui::Button("Dummy Button");
-		ImGui::Text("Dummy Text");
+		m_Simulation.Draw();
 		ImGui::End();
 	}
 

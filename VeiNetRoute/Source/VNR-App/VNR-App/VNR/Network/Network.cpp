@@ -1,6 +1,5 @@
 #include "Network.h"
 
-#include <random>
 #include <algorithm>
 #include <glm/glm.hpp>
 
@@ -31,7 +30,8 @@ namespace VNR
 		if (m_TopologyData.Weights.empty()) return;
 
 		std::uniform_int_distribution<> weightDis(0, m_TopologyData.Weights.size() - 1);
-		std::uniform_int_distribution<> errorDis(0, 3);
+		std::uniform_int_distribution<> errorDis(m_TopologyData.ErrorRange[0], m_TopologyData.ErrorRange[1]);
+		std::uniform_int_distribution<> typeDis(0, 1);
 		std::vector<std::pair<int32, int32>> connections;
 
 		// Calculate total number of connections and distribute them among subnetworks
@@ -147,15 +147,18 @@ namespace VNR
 		}
 
 		// Create Channels based on connections
+		int32 channelIdx = 0;
 		for (const auto& [node1, node2] : connections)
 		{
-			int32 weight = m_TopologyData.Weights[weightDis(gen)];
-			float errorValue = errorDis(gen) * 0.1f;
+			int32 weight = m_TopologyData.bRandomWeights ? m_TopologyData.Weights[weightDis(gen)] : m_TopologyData.Weights[channelIdx % m_TopologyData.Weights.size()];
+			float errorValue = errorDis(gen) * 0.01f;
+			EChannelType channelType = ToEChannelType(typeDis(gen));
 
-			Channels.push_back(MakeUnique<Channel>(Nodes[node1].get(), Nodes[node2].get(), EChannelType::Duplex, weight, errorValue));
+			Channels.push_back(MakeUnique<Channel>(Nodes[node1].get(), Nodes[node2].get(), channelType, weight, errorValue));
 			Channel* channel = Channels.back().get();
 			Nodes[node1]->Channels.push_back(channel);
 			Nodes[node2]->Channels.push_back(channel);
+			channelIdx++;
 		}
 
 	}
@@ -256,6 +259,8 @@ namespace VNR
 	{
 		return m_TopologyData;
 	}
+
+
 
 }
 
