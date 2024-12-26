@@ -21,7 +21,7 @@ namespace VNR
 	{
 		VNR_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
-		
+
 		if (!m_Config.WorkingDirectory.empty())
 			std::filesystem::current_path(m_Config.WorkingDirectory);
 
@@ -84,6 +84,9 @@ namespace VNR
 			float time = Time::GetTime();
 			m_DeltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
+
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate(m_DeltaTime);
 
 
 			// TODO: Put in RHI

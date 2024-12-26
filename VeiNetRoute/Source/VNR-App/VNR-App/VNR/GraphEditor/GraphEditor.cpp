@@ -269,6 +269,12 @@ namespace VNR
 		float thickness = m_Canvas.ApplyScale(edge->Thickness);
 
 		ImU32 edgeColor = EdgeColors[edge->Data->Type];
+
+		if (edge->Data->bHighlighted)
+		{
+			edgeColor = Edge::HighlightColor;
+		}
+
 		if (!edge->Data->Node1->bEnabled || !edge->Data->Node2->bEnabled || !edge->Data->bEnabled)
 		{
 			edgeColor = Edge::DisabledColor;

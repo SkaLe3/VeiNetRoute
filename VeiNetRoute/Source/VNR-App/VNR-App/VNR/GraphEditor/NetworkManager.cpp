@@ -18,6 +18,7 @@ namespace VNR
 	{
 		m_Nodes = &nodes;
 		m_Channels = &channels;
+		m_NewNode.ID = m_Nodes->back()->ID + 1;
 	}
 
 	void NetworkManager::Draw()
@@ -153,6 +154,7 @@ namespace VNR
 				{
 					OnCreateNode.Broadcast(m_NewNode);
 					m_NewNode = NetworkNodeData();
+					m_NewNode.ID = m_Nodes->back()->ID + 1;
 					ImGui::CloseCurrentPopup();
 				}
 			}
@@ -322,6 +324,7 @@ namespace VNR
 				if (ImGui::InputInt(("##Weight" + std::to_string(channel->Node1->ID * 100) + std::to_string(channel->Node2->ID)).c_str(), &channel->Weight, 1, 1))
 				{
 					channel->Weight = std::clamp(channel->Weight, 0, 100);
+					channel->bWeightChanged = true;
 				}
 				ImGui::SetNextItemWidth(-1);
 				ImGui::TableSetColumnIndex(6);
@@ -401,7 +404,8 @@ namespace VNR
 				ImGui::Text(" %d", node->ID);
 
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Checkbox(("##Remove" + std::to_string(i)).c_str(), &node->bEnabled);
+				if (ImGui::Checkbox(("##Enable" + std::to_string(i)).c_str(), &node->bEnabled))
+					node->bSwitched = true;
 			}
 			ImGui::EndTable();
 		}

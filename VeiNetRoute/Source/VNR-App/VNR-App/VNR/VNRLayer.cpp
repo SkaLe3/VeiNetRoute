@@ -11,10 +11,10 @@ namespace VNR
 
 
 	VNRLayer::VNRLayer() : Layer("VNRLayer"),
-		m_GraphEditorWindowFlags(ImGuiWindowFlags_NoMove)
+		m_GraphEditorWindowFlags(ImGuiWindowFlags_NoMove), m_Tools(this)
 	{
 		std::vector<int32> weights = { 3, 5, 6, 7, 8, 10, 11, 15, 18, 21 };
-		std::vector<int32> rNetworks = {9, 9, 9};
+		std::vector<int32> rNetworks = { 9, 9, 9 };
 		m_Topology.InitWeights(weights);
 		m_Topology.InitRegionalNetworks(rNetworks);
 		m_Topology.OnGenerate.Add([this](TopologyData data) { GenerateNetwork(data); });
@@ -22,7 +22,7 @@ namespace VNR
 		m_NetworkManager.OnCreateNode.Add([this](NetworkNodeData data) { CreateNode(data); });
 		m_NetworkManager.OnDestroyChannel.Add([this](Channel* channel) { DestroyChannel(channel); });
 		m_NetworkManager.OnDestroyNode.Add([this](NetworkNode* node) { DestroyNode(node); });
-		m_Properties.OnDeleteNode.Add([this](NetworkNode* node) {DestroyNode(node); });
+		m_Properties.OnDeleteNode.Add([this](NetworkNode* node) { DestroyNode(node); });
 
 	}
 
@@ -38,13 +38,22 @@ namespace VNR
 		NetworkManagerWindow();
 		TopologyWindow();
 		PropertiesWindow();
+		ToolsWindow();
 	}
 
+
+	void VNRLayer::OnUpdate(float deltaTime)
+	{
+		if (m_Network)
+			m_Network->SimulationStep(deltaTime);
+	}
 
 	void VNRLayer::GenerateNetwork(TopologyData data)
 	{
 		m_Network = MakeUnique<Network>(data);
 		m_NetworkManager.ProvideNetworkData(m_Network->Nodes, m_Network->Channels);
+		m_Tools.ProvideNetworkData(m_Network->Nodes, m_Network->Channels);
+		m_Simulation.ProvideNetworkData(m_Network->Nodes, m_Network->Channels);
 		m_Editor.GenerateGraph(m_Network->Nodes, m_Network->Channels, m_Network->GetTopology());
 	}
 
@@ -78,6 +87,11 @@ namespace VNR
 		}
 		m_Editor.RemoveNode(node->Visuals);
 		m_Network->RemoveNode(node);
+	}
+
+	UniquePtr<Network>& VNRLayer::GetNetworkRef()
+	{
+		 return m_Network;
 	}
 
 	void VNRLayer::GraphEditorWindow()
@@ -139,6 +153,13 @@ namespace VNR
 
 		ImGui::Begin("Properties");
 		m_Properties.Draw();
+		ImGui::End();
+	}
+
+	void VNRLayer::ToolsWindow()
+	{
+		ImGui::Begin("Tools");
+		m_Tools.Draw();
 		ImGui::End();
 	}
 

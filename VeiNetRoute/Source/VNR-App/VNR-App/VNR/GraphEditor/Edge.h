@@ -17,6 +17,7 @@ namespace VNR
 
 		inline static constexpr ImU32 TextColor = IM_COL32(255, 255, 255, 200);
 		inline static constexpr ImU32 DisabledColor = IM_COL32(200, 200, 200, 200);
+		inline static constexpr ImU32 HighlightColor = IM_COL32(30, 230, 35, 255);
 
 		float Thickness = 4.f;
 

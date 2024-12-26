@@ -1,6 +1,7 @@
 #pragma once
 #include "VNR-Core/Core/CoreDefines.h"
 #include "VNR-App/VNR/Network/Channel.h"
+#include "VNR-App/VNR/Network/DeltaRouting.h"
 
 #include <vector>
 
@@ -14,14 +15,19 @@ namespace VNR
 		bool bEnabled = true;
 	};
 
+	
+
 	struct NetworkNode
 	{
-		uint32 ID;
+		int32 ID;
 		bool bEnabled;
 		std::vector<Channel*> Channels;
+		bool bSwitched;
 
 		Node* Visuals;
 
-		NetworkNode(uint32 id, bool status) : ID(id), bEnabled(status) {}
+		NRoutingTable RoutingTable;
+
+		NetworkNode(uint32 id, bool status) : ID(id), bEnabled(status), bSwitched(false) {}
 	};
 }

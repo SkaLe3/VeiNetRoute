@@ -16,10 +16,14 @@ namespace VNR
 		void DeselectNode();
 		void Draw();
 
+	private:
+		void RoutingTableSection();
+
 	public:
 		DeleteNodeDelegate OnDeleteNode;
 
 	private:
 		NetworkNode* m_SelectedNode;
+		bool m_bOpenRoutingHeader = false;
 	};
 }

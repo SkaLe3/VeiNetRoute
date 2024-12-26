@@ -5,13 +5,13 @@
 #include "VNR-App/VNR/GraphEditor/NetworkManager.h"
 #include "VNR-App/VNR/GraphEditor/Topology.h"
 #include "VNR-App/VNR/GraphEditor/Simulation.h"
+#include "VNR-App/VNR/GraphEditor/Tools.h"
 #include "VNR-App/VNR/Network/Network.h"
 
 #include <imgui.h>
 
 #include <vector>
 
- struct ImDrawList;
 
 namespace VNR
 {
@@ -22,6 +22,7 @@ namespace VNR
 		VNRLayer();
 		void OnAttach() override;
 		void OnGUI() override;
+		void OnUpdate(float deltaTime) override;
 
 
 	public:
@@ -31,12 +32,15 @@ namespace VNR
 		void DestroyChannel(Channel* channel);
 		void DestroyNode(NetworkNode* node);
 
+		UniquePtr<Network>& GetNetworkRef();
+
 	private:
 		void GraphEditorWindow();
 		void SimualtionWindow();
 		void NetworkManagerWindow();
 		void TopologyWindow();
 		void PropertiesWindow();
+		void ToolsWindow();
 
 		ImGuiWindowFlags m_GraphEditorWindowFlags;
 
@@ -47,6 +51,7 @@ namespace VNR
 		Properties m_Properties;
 		NetworkManager m_NetworkManager;
 		Simulation m_Simulation;
+		Tools m_Tools;
 
 	};
 }

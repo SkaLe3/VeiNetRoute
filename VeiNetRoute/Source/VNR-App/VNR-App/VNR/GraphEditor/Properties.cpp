@@ -1,5 +1,6 @@
 #include "Properties.h"
 #include "VNR-App/VNR/Network/NetworkNode.h"
+#include "VNR-App/Utils/Math/MathHelpers.h"
 #include <imgui.h>
 
 namespace VNR
@@ -68,7 +69,8 @@ namespace VNR
 			shouldDelete = true;
 		}
 
-		ImGui::Checkbox("Enable", &m_SelectedNode->bEnabled);
+		if (ImGui::Checkbox("Enable", &m_SelectedNode->bEnabled))
+			m_SelectedNode->bSwitched = true;
 
 		ImGui::SeparatorText("Connections");
 
@@ -96,7 +98,8 @@ namespace VNR
 			int32 connectedIDtext = connectedID;
 
 			// Display "To Node" and connection details
-			ImGui::Checkbox(("##Enabled" + std::to_string(connectedID)).c_str(), &channel->bEnabled);
+			if (ImGui::Checkbox(("##Enabled" + std::to_string(connectedID)).c_str(), &channel->bEnabled))
+				channel->bSwitched = true;
 			ImGui::SameLine();
 			PrettyInt("##ToNode", &connectedIDtext, 30);
 			ImGui::SameLine();
@@ -131,6 +134,7 @@ namespace VNR
 			if (ImGui::InputInt(("##Weight" + std::to_string(connectedID)).c_str(), &channel->Weight, 1, 1))
 			{
 				channel->Weight = std::clamp(channel->Weight, 0, 100);
+				channel->bWeightChanged = true;
 			}
 			ImGui::SameLine();
 			if (ImGui::InputFloat(("##Error" + std::to_string(connectedID)).c_str(), &channel->ErrorProbability, 0.1f, 0.1f, "%.2f"))
@@ -140,9 +144,71 @@ namespace VNR
 			ImGui::PopItemWidth();
 		}
 		if (shouldDelete)
+		{
 			OnDeleteNode.Broadcast(m_SelectedNode);
+			m_SelectedNode = nullptr;
+		}
+
+		ImGui::SeparatorText("Routing");
+
+		RoutingTableSection();
 	}
 
+
+	void Properties::RoutingTableSection()
+	{
+		ImGui::SetNextItemOpen(m_bOpenRoutingHeader);
+		if (!ImGui::CollapsingHeader("Routing Table"))
+		{
+			m_bOpenRoutingHeader = false;
+			return;
+		}
+		m_bOpenRoutingHeader = true;
+
+		const ImGuiTableFlags tableFlags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable |
+			ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_SizingFixedFit |
+			ImGuiTableFlags_RowBg | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY;
+		if (ImGui::BeginTable("Routing Table", 4, tableFlags))
+		{
+			ImGui::TableSetupScrollFreeze(0, 1);
+			ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[0];
+			ImGui::PushFont(boldFont);
+			ImGui::TableSetupColumn("Destination ID");
+			ImGui::TableSetupColumn("Next Hop ID");
+			ImGui::TableSetupColumn("Cost");
+			ImGui::TableSetupColumn("");
+			ImGui::TableHeadersRow();
+			ImGui::PopFont();
+
+			if (m_SelectedNode == nullptr || m_SelectedNode->RoutingTable.empty())
+			{
+				ImGui::EndTable();
+				return;
+			}
+
+			for (auto& [id, rt] : m_SelectedNode->RoutingTable)
+			{
+				ImGui::TableNextRow();
+
+				ImGui::TableSetColumnIndex(0);
+				ImVec2 textPos = ImGui::GetContentRegionAvail() - ImGui::CalcTextSize(std::to_string(rt.DestinationID).c_str());
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + textPos.x * 0.5f);
+				ImGui::Text("%d", rt.DestinationID);
+
+				ImGui::TableSetColumnIndex(1);
+				textPos = ImGui::GetContentRegionAvail() - ImGui::CalcTextSize(std::to_string(rt.NextHopID).c_str());
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + textPos.x * 0.5f);
+				ImGui::Text("%d", rt.NextHopID);
+
+				ImGui::TableSetColumnIndex(2);
+				textPos = ImGui::GetContentRegionAvail() - ImGui::CalcTextSize(std::to_string(rt.Cost).c_str());
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + textPos.x * 0.5f);
+				ImGui::Text("%d", rt.Cost);
+
+			}
+			ImGui::EndTable();
+		}
+	}
 
 }
 

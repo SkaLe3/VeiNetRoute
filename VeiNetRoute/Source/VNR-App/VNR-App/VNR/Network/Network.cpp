@@ -1,6 +1,9 @@
 #include "Network.h"
 
 #include <algorithm>
+#include <limits>
+#include <iostream>
+
 #include <glm/glm.hpp>
 
 namespace VNR
@@ -14,7 +17,7 @@ namespace VNR
 		{
 			for (uint32 j = 0; j < data.NodesInNetwork[i]; j++)
 			{
-				Nodes.push_back(MakeUnique<NetworkNode>(counter, true));
+				AddNode({ (int32)counter, true });
 				counter++;
 			}
 		}
@@ -39,7 +42,7 @@ namespace VNR
 		int32 totalConnections = glm::ceil(Nodes.size() * m_TopologyData.AVGNetworkDegree * 0.5f) - (networkCount - 1);
 
 		std::vector<int32> subNetworkConnectionLimits;
-		int32 usedConnections = 0; 
+		int32 usedConnections = 0;
 		for (int32 subNetworkIdx = 0; subNetworkIdx < networkCount; subNetworkIdx++)
 		{
 			float coeficient = (float)m_TopologyData.NodesInNetwork[subNetworkIdx] / (float)Nodes.size();
@@ -154,13 +157,11 @@ namespace VNR
 			float errorValue = errorDis(gen) * 0.01f;
 			EChannelType channelType = ToEChannelType(typeDis(gen));
 
-			Channels.push_back(MakeUnique<Channel>(Nodes[node1].get(), Nodes[node2].get(), channelType, weight, errorValue));
-			Channel* channel = Channels.back().get();
-			Nodes[node1]->Channels.push_back(channel);
-			Nodes[node2]->Channels.push_back(channel);
+			AddChannel({ {node1, node2}, channelType, weight, errorValue });
 			channelIdx++;
 		}
 
+		InitRoutingTables();
 	}
 
 	Channel* Network::AddChannel(ChannelData data)
@@ -188,6 +189,13 @@ namespace VNR
 		Channel* channel = Channels.back().get();
 		nodes[0]->Channels.push_back(channel);
 		nodes[1]->Channels.push_back(channel);
+
+		if (!m_bRoutingTablesInitialized)
+			return channel;
+
+		DeltaRouting::PropagateDelta(Nodes, { EDeltaType::ChannelAddition, {channel->Node1->ID, channel->Node2->ID }});
+		DeltaRouting::SynchronizeRoutingTables(Nodes, Channels);
+
 		return channel;
 	}
 
@@ -195,12 +203,18 @@ namespace VNR
 	{
 		Nodes.push_back(MakeUnique<NetworkNode>(data.ID, data.bEnabled));
 		NetworkNode* node = Nodes.back().get();
+
+		DeltaRouting::PropagateDelta(Nodes, { EDeltaType::NodeAddition, {node->ID} });
+		DeltaRouting::SynchronizeRoutingTables(Nodes, Channels);
 		return node;
 	}
 
 	void Network::RemoveChannel(Channel* channel)
 	{
-		std::vector<Channel*>& node1Channels = channel->Node1->Channels;
+		NetworkNode* node1 = channel->Node1;
+		NetworkNode* node2 = channel->Node2;
+
+		std::vector<Channel*>& node1Channels = node1->Channels;
 		if (!node1Channels.empty())
 		{
 			auto node1channelIt = std::find_if(node1Channels.begin(), node1Channels.end(),
@@ -214,7 +228,7 @@ namespace VNR
 			}
 		}
 
-		std::vector<Channel*>& node2Channels = channel->Node2->Channels;
+		std::vector<Channel*>& node2Channels = node2->Channels;
 		if (!node2Channels.empty())
 		{
 			auto node2channelIt = std::find_if(node2Channels.begin(), node2Channels.end(),
@@ -239,10 +253,17 @@ namespace VNR
 		{
 			Channels.erase(it);
 		}
+
+		if (!m_bRoutingTablesInitialized)
+			return;
+
+		DeltaRouting::PropagateDelta(Nodes, { EDeltaType::ChannelReduction, {node1->ID, node2->ID} });
+		DeltaRouting::SynchronizeRoutingTables(Nodes, Channels);
 	}
 
 	void Network::RemoveNode(NetworkNode* node)
 	{
+		int32 nodeID = node->ID;
 		auto it = std::find_if(Nodes.begin(), Nodes.end(),
 							   [&node](const UniquePtr<NetworkNode>& ptr)
 							   {
@@ -253,6 +274,12 @@ namespace VNR
 		{
 			Nodes.erase(it);
 		}
+
+		if (!m_bRoutingTablesInitialized)
+			return;
+
+		DeltaRouting::PropagateDelta(Nodes, { EDeltaType::NodeReduction, {nodeID} });
+		DeltaRouting::SynchronizeRoutingTables(Nodes, Channels);
 	}
 
 	TopologyData Network::GetTopology() const
@@ -261,6 +288,59 @@ namespace VNR
 	}
 
 
+
+	void Network::SimulationStep(float deltaTime)
+	{
+		static float timeElapsed = 0;
+		timeElapsed += deltaTime;
+		if (timeElapsed > SynchronizationTimer)
+		{
+			DeltaRouting::SynchronizeRoutingTables(Nodes, Channels);
+			timeElapsed = 0;
+			VNR_TRACE("Network Routing tables Synchronized!");
+		}
+
+	}
+
+	void Network::SetSynchronizationTimer(float delta)
+	{
+		SynchronizationTimer = delta;
+	}
+
+	std::unordered_map<int32, std::vector<Route>> Network::GetAllRoutingTables()
+	{
+		std::unordered_map<int32, std::vector<Route>> routingTables;
+
+		for (const auto& node : Nodes)
+		{
+			std::vector<Route> routeTable;
+			for (const auto& [id, route] : node->RoutingTable)
+			{
+				routeTable.push_back(route);
+			}
+
+			routingTables[node->ID] = routeTable;
+		}
+		return routingTables;
+	}
+
+	void Network::InitRoutingTables()
+	{
+		m_bRoutingTablesInitialized = true;
+
+
+		for (auto& node : Nodes)
+		{
+			for (auto& destinationNode : Nodes)
+			{
+				node->RoutingTable[destinationNode->ID] = { destinationNode->ID, -1,  std::numeric_limits<int32>::max() };
+			}
+			node->RoutingTable[node->ID] = { node->ID, node->ID, 0 };
+
+		}
+		DeltaRouting::SynchronizeRoutingTables(Nodes, Channels);
+
+	}
 
 }
 

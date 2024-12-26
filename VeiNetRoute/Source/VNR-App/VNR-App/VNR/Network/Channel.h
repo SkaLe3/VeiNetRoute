@@ -32,11 +32,14 @@ namespace VNR
 		int32 Weight;
 		float ErrorProbability;
 		bool bEnabled;
+		bool bSwitched;
+		bool bWeightChanged;
+		bool bHighlighted;
 
 		Edge* Visuals;
 
 		Channel(NetworkNode* node1, NetworkNode* node2, EChannelType type, int32 weight, float ep)
-			: Node1(node1), Node2(node2), Type(type), Weight(weight), ErrorProbability(ep), bEnabled(true)
+			: Node1(node1), Node2(node2), Type(type), Weight(weight), ErrorProbability(ep), bEnabled(true), bSwitched(false), bWeightChanged(false), bHighlighted(false)
 		{}
 
 	};
