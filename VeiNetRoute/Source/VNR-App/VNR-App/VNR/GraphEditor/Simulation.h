@@ -63,6 +63,9 @@ namespace VNR
 		void Draw();
 
 	private:
+		void ControlPanel();
+		void SimulationTable();
+
 		void NodeSelector(const char* label, int32* location, bool &random, int32 width);
 
 	private:
@@ -73,5 +76,6 @@ namespace VNR
 		int32 m_DestinationID = -1;
 
 		PacketTransmissionSettings m_Settings;
+		std::vector<PacketTransmissionResult> m_Result;
 	};
 }
