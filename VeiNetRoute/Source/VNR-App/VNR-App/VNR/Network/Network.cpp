@@ -33,7 +33,7 @@ namespace VNR
 		if (m_TopologyData.Weights.empty()) return;
 
 		std::uniform_int_distribution<> weightDis(0, m_TopologyData.Weights.size() - 1);
-		std::uniform_int_distribution<> errorDis(m_TopologyData.ErrorRange[0], m_TopologyData.ErrorRange[1]);
+		std::uniform_real_distribution<> errorDis(m_TopologyData.ErrorRange[0], m_TopologyData.ErrorRange[1]);
 		std::uniform_int_distribution<> typeDis(0, 1);
 		std::vector<std::pair<int32, int32>> connections;
 
@@ -154,7 +154,7 @@ namespace VNR
 		for (const auto& [node1, node2] : connections)
 		{
 			int32 weight = m_TopologyData.bRandomWeights ? m_TopologyData.Weights[weightDis(gen)] : m_TopologyData.Weights[channelIdx % m_TopologyData.Weights.size()];
-			float errorValue = errorDis(gen) * 0.01f;
+			float errorValue = errorDis(gen);
 			EChannelType channelType = ToEChannelType(typeDis(gen));
 
 			AddChannel({ {node1, node2}, channelType, weight, errorValue });

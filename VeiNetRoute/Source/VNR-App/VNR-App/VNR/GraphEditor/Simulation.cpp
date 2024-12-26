@@ -56,7 +56,16 @@ namespace VNR
 			}
 			specs.PayloadSize = specs.MTU - specs.ServiceSize;
 
-			SendMessage(specs);
+			bool status = SendMessage(specs);
+			if (!status)
+			{
+				PacketTransmissionResult result;
+				result.Protocol = specs.Protocol;
+				result.Success = false;
+				m_Result.push_back(result);
+				VNR_WARN("TCP Connection lost");
+			}
+
 		}
 
 	}
@@ -71,7 +80,7 @@ namespace VNR
 		res.ServiceSize = specs.ServiceSize;
 
 
-		Packet packetPrototype = { ENetworkProtocol::TCP, specs.SourceNode, specs.DestinationNode, specs.ServiceSize, specs.PayloadSize };
+	
 
 		double time = 0;
 		bool status = false;
@@ -79,6 +88,7 @@ namespace VNR
 		int32 retransmitTries = 0;
 		if (specs.Protocol == ENetworkProtocol::TCP)
 		{
+			Packet packetPrototype = { ENetworkProtocol::TCP, specs.SourceNode, specs.DestinationNode, specs.ServiceSize, specs.PayloadSize };
 			/* Begin Handshake*/
 			Packet syn = packetPrototype;
 			syn.ServiceSize = 40;
@@ -101,10 +111,14 @@ namespace VNR
 				if (status)
 				{
 					res.PacketsReceived++;
+					res.ServiceSize+=syn.ServiceSize;
 					status = TransmitPacket(syn_ack, destinationNode, time);
 					res.PacketsSent++;
 					if (status)
+					{
 						res.PacketsReceived++;
+						res.ServiceSize += syn_ack.ServiceSize;
+					}
 				}
 
 				if (!status)
@@ -120,6 +134,7 @@ namespace VNR
 			status = false;
 
 			TransmitPacket(ack_handshake, sourceNode, time, 0);
+			res.ServiceSize += ack_handshake.ServiceSize;
 			res.PacketsSent++;
 			res.PacketsReceived++;
 
@@ -146,11 +161,13 @@ namespace VNR
 					if (status)
 					{
 						res.PacketsReceived++;
+						res.ServiceSize += dataPacket.ServiceSize;
 						status = TransmitPacket(ack, destinationNode, time);
 						res.PacketsSent++;
 						if (status)
 						{
 							res.PacketsReceived++;
+							res.ServiceSize += ack.ServiceSize;
 							dataLeft -= dataPacket.PayloadSize;
 						}
 					}
@@ -188,10 +205,14 @@ namespace VNR
 				if (status)
 				{
 					res.PacketsReceived++;
+					res.ServiceSize += fin.ServiceSize;
 					status = TransmitPacket(ack_finish, destinationNode, time);
 					res.PacketsSent++;
 					if (status)
+					{
 						res.PacketsReceived++;
+						res.ServiceSize += ack_finish.ServiceSize;
+					}
 				}
 
 				if (!status)
@@ -203,7 +224,7 @@ namespace VNR
 			res.RetransmissionCount += retransmitTries;
 			retransmitTries = 0;
 			if (!status)
-				return false;  
+				return false;
 			status = false;
 
 
@@ -220,10 +241,14 @@ namespace VNR
 				if (status)
 				{
 					res.PacketsReceived++;
+					res.ServiceSize += fin.ServiceSize;
 					status = TransmitPacket(ack_finish, sourceNode, time);
 					res.PacketsSent++;
 					if (status)
+					{
 						res.PacketsReceived++;
+						res.ServiceSize += ack_finish.ServiceSize;
+					}
 				}
 
 				if (!status)
@@ -245,18 +270,31 @@ namespace VNR
 			res.TransmissionTime = time;
 			res.PacketsLossRate = (float)res.PacketsSent - (float)res.PacketsReceived / (float)res.PacketsSent;
 
-
-
-
-
 		}
 		else
 		{
+			Packet datagram = { ENetworkProtocol::UDP, specs.SourceNode, specs.DestinationNode, specs.ServiceSize, specs.PayloadSize };
+			int32 dataLeft = res.MessageSize;
+
+			double time = 0;
+			NetworkNode* sourceNode = FindNode(specs.SourceNode);
+
+			while (dataLeft > 0)
+			{
+				res.PacketsSent++;
+				res.ServiceSize += datagram.ServiceSize;
+				datagram.PayloadSize = std::min(datagram.PayloadSize, dataLeft);
+				status = TransmitPacket(datagram, sourceNode, time);
+				dataLeft -= datagram.PayloadSize;
+				if (status)
+					res.PacketsReceived++;
+
+			}
+
+			res.TransmissionTime = time;
+			res.PacketsLossRate = 1.f - (float)res.PacketsReceived / (float)res.PacketsSent;
 
 		}
-
-
-
 		m_Result.push_back(res);
 	}
 
@@ -361,7 +399,7 @@ namespace VNR
 		}
 		else
 		{
-			if (ImGui::InputInt("##MessageSize", &m_Settings.MessageSize, 1, 10))
+			if (ImGui::InputInt("##MessageSize", &m_Settings.MessageSize, 0, 0))
 			{
 				m_Settings.MessageSize = std::clamp(m_Settings.MessageSize, 500, 10000000);
 			}
@@ -437,7 +475,10 @@ namespace VNR
 				ImGui::Text("%d", res.ServiceSize);
 
 				ImGui::TableSetColumnIndex(7);
-				ImGui::Text("%f (s)", res.TransmissionTime);
+				if (res.Success)
+					ImGui::Text("%.4f (s)", res.TransmissionTime);
+				else
+					ImGui::Text("Connection lost");
 
 				ImGui::TableSetColumnIndex(8);
 				if (res.Protocol == ENetworkProtocol::TCP)
@@ -558,14 +599,15 @@ namespace VNR
 
 		std::random_device rd;
 		std::mt19937 gen(rd());
-		std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+		std::uniform_real_distribution<float> dist(0.0f, 100.0f);
 
 		float errror = errorOverride;
 		if (errorOverride == -1.f)
 			errror = channel->ErrorProbability;
 
-		if (dist(gen) < errror)
-			return true;
+		float random = dist(gen);
+		if (random < errror)
+			return false;
 
 		if (nextHop == packet.DestinationNode)
 			return true;

@@ -137,9 +137,9 @@ namespace VNR
 				channel->bWeightChanged = true;
 			}
 			ImGui::SameLine();
-			if (ImGui::InputFloat(("##Error" + std::to_string(connectedID)).c_str(), &channel->ErrorProbability, 0.1f, 0.1f, "%.2f"))
+			if (ImGui::InputFloat(("##Error" + std::to_string(connectedID)).c_str(), &channel->ErrorProbability, 0.1f, 0.1f, "%.2f%%"))
 			{
-				channel->ErrorProbability = std::clamp(channel->ErrorProbability, 0.f, 1.f);
+				channel->ErrorProbability = std::clamp(channel->ErrorProbability, 0.f, 100.f);
 			}
 			ImGui::PopItemWidth();
 		}

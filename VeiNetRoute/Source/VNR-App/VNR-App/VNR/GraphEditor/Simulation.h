@@ -22,6 +22,8 @@ namespace VNR
 
 		float PacketsLossRate;
 
+		bool Success;
+
 		PacketTransmissionResult()
 			: Protocol(ENetworkProtocol::UDP)
 			, SourceNode(-1)
@@ -36,7 +38,7 @@ namespace VNR
 		{}
 		PacketTransmissionResult(ENetworkProtocol protocol, int32 s, int32 d, int32 ms, int32 psc, int32 prc, int32 ss, float tt, int32 rc, float plr)
 		: Protocol(protocol), SourceNode(s), DestinationNode(d), MessageSize(ms), PacketsSent(psc), PacketsReceived(prc), ServiceSize(ss),
-		 TransmissionTime(tt), RetransmissionCount(rc), PacketsLossRate(plr)  {}
+		 TransmissionTime(tt), RetransmissionCount(rc), PacketsLossRate(plr), Success(true)  {}
 	};
 
 	struct PacketTransmissionSettings

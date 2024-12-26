@@ -330,7 +330,7 @@ namespace VNR
 				ImGui::TableSetColumnIndex(6);
 				if (ImGui::InputFloat(("##Error" + std::to_string(channel->Node1->ID * 100) + std::to_string(channel->Node2->ID)).c_str(), &channel->ErrorProbability, 0, 0, "%.2f"))
 				{
-					channel->ErrorProbability = std::clamp(channel->ErrorProbability, 0.f, 1.f);
+					channel->ErrorProbability = std::clamp(channel->ErrorProbability, 0.f, 100.f);
 				}
 			}
 			ImGui::EndTable();
