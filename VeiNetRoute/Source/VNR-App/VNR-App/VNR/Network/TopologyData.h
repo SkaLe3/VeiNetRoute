@@ -9,7 +9,7 @@ namespace VNR
 		std::vector<int32> Weights;
 		std::vector<int32> NodesInNetwork;
 		float AVGNetworkDegree = 0;
-		int32 ErrorRange[2] = {0, 30};
+		int32 ErrorRange[2] = {0, 10};
 		bool bRandomWeights = true;
 	};
 }

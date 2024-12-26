@@ -1,6 +1,11 @@
 #include "Simulation.h"
 
 #include <imgui.h>
+#include <glm/glm.hpp>
+
+#include <random>
+#include <cstdio>
+
 
 namespace VNR
 {
@@ -15,25 +20,244 @@ namespace VNR
 	{
 		m_Nodes = &nodes;
 		m_Channels = &channels;
+	}
 
-		PacketTransmissionResult res = {
-			ENetworkProtocol::UDP,
-			0,
-			15,
-			124000,
-			124000 / 1460,
-			40 * 124000 / 1460,
-			101500,
-			670,
-			56,
-			12
-		};
-		m_Result.push_back(res);
-		m_Result.push_back(res);
-		m_Result.push_back(res);
-		m_Result.push_back(res);
-		m_Result.push_back(res);
+	void Simulation::Simulate(PacketTransmissionSettings settings)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		if (settings.bRandomMessageCount)
+		{
+			std::uniform_int_distribution<> dis(1, 10);
+			settings.MessageCount = dis(gen);
+		}
 
+		if (settings.bRandomMTU)
+		{
+
+			std::uniform_int_distribution<> dis(500, 9000);
+			settings.MTU = dis(gen);
+		}
+
+		for (size_t i = 0; i < settings.MessageCount; i++)
+		{
+			PacketTransmissionSpecifications specs(settings, m_Nodes);
+			if (specs.SourceNode == specs.DestinationNode)
+				continue;
+
+			switch (specs.Protocol)
+			{
+			case ENetworkProtocol::TCP:
+				specs.ServiceSize = 60;
+				break;
+			case ENetworkProtocol::UDP:
+				specs.ServiceSize = 28;
+				break;
+			}
+			specs.PayloadSize = specs.MTU - specs.ServiceSize;
+
+			SendMessage(specs);
+		}
+
+	}
+
+	bool Simulation::SendMessage(PacketTransmissionSpecifications& specs)
+	{
+		PacketTransmissionResult res;
+		res.Protocol = specs.Protocol;
+		res.SourceNode = specs.SourceNode;
+		res.DestinationNode = specs.DestinationNode;
+		res.MessageSize = specs.MessageSize;
+		res.ServiceSize = specs.ServiceSize;
+
+
+		Packet packetPrototype = { ENetworkProtocol::TCP, specs.SourceNode, specs.DestinationNode, specs.ServiceSize, specs.PayloadSize };
+
+		double time = 0;
+		bool status = false;
+		int32 retransmissionTryLimit = 15;
+		int32 retransmitTries = 0;
+		if (specs.Protocol == ENetworkProtocol::TCP)
+		{
+			/* Begin Handshake*/
+			Packet syn = packetPrototype;
+			syn.ServiceSize = 40;
+			syn.PayloadSize = 0;
+			Packet syn_ack = syn;
+			syn_ack.ServiceSize = 60;
+			syn_ack.SourceNode = specs.DestinationNode;
+			syn_ack.DestinationNode = specs.SourceNode;
+			Packet ack_handshake = syn;
+			ack_handshake.ServiceSize = 20;
+
+			double time = 0;
+			NetworkNode* sourceNode = FindNode(specs.SourceNode);
+			NetworkNode* destinationNode = FindNode(specs.DestinationNode);
+
+			while (!status && retransmitTries < retransmissionTryLimit)
+			{
+				status = TransmitPacket(syn, sourceNode, time);
+				res.PacketsSent++;
+				if (status)
+				{
+					res.PacketsReceived++;
+					status = TransmitPacket(syn_ack, destinationNode, time);
+					res.PacketsSent++;
+					if (status)
+						res.PacketsReceived++;
+				}
+
+				if (!status)
+				{
+					retransmitTries++;
+					time += 0.2f; // wait time before retransmission
+				}
+			}
+			res.RetransmissionCount += retransmitTries;
+			retransmitTries = 0;
+			if (!status)
+				return false;  // return if failed to establish connection
+			status = false;
+
+			TransmitPacket(ack_handshake, sourceNode, time, 0);
+			res.PacketsSent++;
+			res.PacketsReceived++;
+
+			/* End Handshake */
+
+			/* Begin Data Transmission */
+			Packet dataPacket = packetPrototype;
+			Packet ack = packetPrototype;
+			ack.ServiceSize = 20;
+			ack.PayloadSize = 0;
+			ack.DestinationNode = specs.SourceNode;
+			ack.SourceNode = specs.DestinationNode;
+
+			int32 dataLeft = res.MessageSize;
+
+			while (dataLeft > 0)
+			{
+
+				while (!status && retransmitTries < retransmissionTryLimit)
+				{
+					dataPacket.PayloadSize = std::min(dataPacket.PayloadSize, dataLeft);
+					status = TransmitPacket(dataPacket, sourceNode, time);
+					res.PacketsSent++;
+					if (status)
+					{
+						res.PacketsReceived++;
+						status = TransmitPacket(ack, destinationNode, time);
+						res.PacketsSent++;
+						if (status)
+						{
+							res.PacketsReceived++;
+							dataLeft -= dataPacket.PayloadSize;
+						}
+					}
+
+					if (!status)
+					{
+						retransmitTries++;
+						time += 0.2f;
+					}
+				}
+
+				res.RetransmissionCount += retransmitTries;
+				retransmitTries = 0;
+				if (!status)
+					return false;  // return if connection lost
+				status = false;
+			}
+
+			/* End Data Transmission */
+
+			/* Begin Finish Handshake*/
+			Packet fin = packetPrototype;
+			fin.ServiceSize = 20;
+			fin.PayloadSize = 0;
+			Packet ack_finish = fin;
+			ack_finish.ServiceSize = 20;
+			ack_finish.SourceNode = specs.DestinationNode;
+			ack_finish.DestinationNode = specs.SourceNode;
+
+			// Sender fin
+			while (!status && retransmitTries < retransmissionTryLimit)
+			{
+				status = TransmitPacket(fin, sourceNode, time);
+				res.PacketsSent++;
+				if (status)
+				{
+					res.PacketsReceived++;
+					status = TransmitPacket(ack_finish, destinationNode, time);
+					res.PacketsSent++;
+					if (status)
+						res.PacketsReceived++;
+				}
+
+				if (!status)
+				{
+					retransmitTries++;
+					time += 0.2f; // wait time before retransmission
+				}
+			}
+			res.RetransmissionCount += retransmitTries;
+			retransmitTries = 0;
+			if (!status)
+				return false;  
+			status = false;
+
+
+			fin.SourceNode = specs.DestinationNode;
+			fin.DestinationNode = specs.SourceNode;
+			ack_finish.SourceNode = specs.SourceNode;
+			ack_finish.DestinationNode = specs.DestinationNode;
+
+			// Receiver fin
+			while (!status && retransmitTries < retransmissionTryLimit)
+			{
+				status = TransmitPacket(fin, destinationNode, time);
+				res.PacketsSent++;
+				if (status)
+				{
+					res.PacketsReceived++;
+					status = TransmitPacket(ack_finish, sourceNode, time);
+					res.PacketsSent++;
+					if (status)
+						res.PacketsReceived++;
+				}
+
+				if (!status)
+				{
+					retransmitTries++;
+					time += 0.2f; // wait time before retransmission
+				}
+			}
+			res.RetransmissionCount += retransmitTries;
+			retransmitTries = 0;
+			if (!status)
+				return false;
+			status = false;
+
+
+
+			/* End Finish Handshake */
+
+			res.TransmissionTime = time;
+			res.PacketsLossRate = (float)res.PacketsSent - (float)res.PacketsReceived / (float)res.PacketsSent;
+
+
+
+
+
+		}
+		else
+		{
+
+		}
+
+
+
+		m_Result.push_back(res);
 	}
 
 	void Simulation::Draw()
@@ -99,7 +323,10 @@ namespace VNR
 		}
 		else
 		{
-			ImGui::InputInt("##MTUSize", &m_Settings.MTU, 10, 100);
+			if (ImGui::InputInt("##MTUSize", &m_Settings.MTU, 10, 100))
+			{
+				m_Settings.MTU = std::clamp(m_Settings.MTU, 500, 9000);
+			}
 		}
 		ImGui::SameLine();
 		ImGui::Checkbox("##RandomMTU", &m_Settings.bRandomMTU);
@@ -114,14 +341,17 @@ namespace VNR
 		}
 		else
 		{
-			ImGui::InputInt("##MessageCount", &m_Settings.MessageCount, 1, 10);
+			if (ImGui::InputInt("##MessageCount", &m_Settings.MessageCount, 1, 10))
+			{
+				m_Settings.MessageCount = std::clamp(m_Settings.MessageCount, 1, 10);
+			}
 		}
 
 		ImGui::SameLine();
 		ImGui::Checkbox("##RandomMessageCount", &m_Settings.bRandomMessageCount);
 
 
-		ImGui::Text("Message Count");
+		ImGui::Text("Message Size");
 		ImGui::SameLine(120);
 		ImGui::SetNextItemWidth(100);
 		if (m_Settings.bRandomMessageSize)
@@ -131,7 +361,10 @@ namespace VNR
 		}
 		else
 		{
-			ImGui::InputInt("##MessageSize", &m_Settings.MessageSize, 1, 10);
+			if (ImGui::InputInt("##MessageSize", &m_Settings.MessageSize, 1, 10))
+			{
+				m_Settings.MessageSize = std::clamp(m_Settings.MessageSize, 500, 10000000);
+			}
 		}
 		ImGui::SameLine();
 		ImGui::Checkbox("##RandomMessageSize", &m_Settings.bRandomMessageSize);
@@ -140,7 +373,11 @@ namespace VNR
 		float width = ImGui::GetContentRegionAvail().x;
 		if (ImGui::Button("Send", ImVec2{ width, 30.f }))
 		{
-
+			Simulate(m_Settings);
+		}
+		if (ImGui::Button("Clear", ImVec2{ width, 30.f }))
+		{
+			m_Result.clear();
 		}
 		ImGui::EndChild();
 	}
@@ -157,27 +394,63 @@ namespace VNR
 		{
 			ImGui::TableSetupScrollFreeze(0, 1);
 
-			ImGui::TableSetupColumn("Protocol", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 50);
-			ImGui::TableSetupColumn("Source");//, ImGuiTableColumnFlags_WidthFixed, 20);
-			ImGui::TableSetupColumn("Destination");//, ImGuiTableColumnFlags_WidthFixed, 20);
-			ImGui::TableSetupColumn("Size");//, ImGuiTableColumnFlags_WidthFixed, 40);
-			ImGui::TableSetupColumn("Packets");//, ImGuiTableColumnFlags_WidthFixed, 40);
-			ImGui::TableSetupColumn("Service");//, ImGuiTableColumnFlags_WidthFixed, 40);
-			ImGui::TableSetupColumn("Payload");//, ImGuiTableColumnFlags_WidthFixed, 40);
-			ImGui::TableSetupColumn("Time");//, ImGuiTableColumnFlags_WidthFixed, 40);
-			ImGui::TableSetupColumn("Retransmission");//, ImGuiTableColumnFlags_WidthFixed, 40);
-			ImGui::TableSetupColumn("Loss");//, ImGuiTableColumnFlags_WidthFixed, 20);
+			ImGui::TableSetupColumn(" Protocol");
+			ImGui::TableSetupColumn("Source");
+			ImGui::TableSetupColumn("Destination");
+			ImGui::TableSetupColumn("Size");
+			ImGui::TableSetupColumn("Sent Packets");
+			ImGui::TableSetupColumn("Received Packets");
+			ImGui::TableSetupColumn("Service");
+			ImGui::TableSetupColumn("Time");
+			ImGui::TableSetupColumn("Retransmission");
+			ImGui::TableSetupColumn("Loss");
 
 			ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[0];
 			ImGui::PushFont(boldFont);
 			ImGui::TableHeadersRow();
 			ImGui::PopFont();
 
+			static const char* types[]{ " UDP", " TCP" };
+
 			for (int32 i = 0; i < m_Result.size(); i++)
 			{
+				PacketTransmissionResult& res = m_Result[i];
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				ImGui::Text();
+				ImGui::Text(types[+res.Protocol]);
+
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%d", res.SourceNode);
+				ImGui::TableSetColumnIndex(2);
+				ImGui::Text("%d", res.DestinationNode);
+
+				ImGui::TableSetColumnIndex(3);
+				ImGui::Text("%d", res.MessageSize);
+
+				ImGui::TableSetColumnIndex(4);
+				ImGui::Text("%d", res.PacketsSent);
+
+				ImGui::TableSetColumnIndex(5);
+				ImGui::Text("%d", res.PacketsReceived);
+
+				ImGui::TableSetColumnIndex(6);
+				ImGui::Text("%d", res.ServiceSize);
+
+				ImGui::TableSetColumnIndex(7);
+				ImGui::Text("%f (s)", res.TransmissionTime);
+
+				ImGui::TableSetColumnIndex(8);
+				if (res.Protocol == ENetworkProtocol::TCP)
+					ImGui::Text("%d", res.RetransmissionCount);
+				else
+					ImGui::Text(" ");
+
+				ImGui::TableSetColumnIndex(9);
+				if (res.Protocol == ENetworkProtocol::UDP)
+					DisplayDynamicPrecisionPercentage(res.PacketsLossRate);
+				else
+					ImGui::Text(" ");
+
 			}
 
 
@@ -223,4 +496,127 @@ namespace VNR
 		ImGui::SameLine();
 		ImGui::Checkbox(("##" + String(label) + "Random").c_str(), &random);
 	}
+
+	void Simulation::DisplayDynamicPrecisionPercentage(float value)
+	{
+		float v = value * 100.f;
+		int32 precision = 0;
+		float fractional_part = glm::abs(v - glm::round(v));
+		if (fractional_part > 0.001f)
+		{
+			if (fractional_part < 0.01f)
+				precision = 3;
+			else if (fractional_part < 0.1f)
+				precision = 2;
+			else
+				precision = 1;
+		}
+		char buffer[32];
+		snprintf(buffer, sizeof(buffer), ("%." + std::to_string(precision) + "f%%").c_str(), v);
+		ImGui::Text("%s", buffer);
+
+	}
+
+	NetworkNode* Simulation::FindNode(int32 nodeID)
+	{
+		auto it = std::find_if(m_Nodes->begin(), m_Nodes->end(), [&](const UniquePtr<NetworkNode>& node)
+							   {
+								   return node->ID == nodeID;
+							   });
+
+		if (it == m_Nodes->end())
+			return nullptr;
+		return it->get();
+	}
+
+	Channel* Simulation::FindChannel(NetworkNode* node1, int32 node2)
+	{
+		auto it = std::find_if(node1->Channels.begin(), node1->Channels.end(), [&](const Channel* c)
+							   {
+								   return c->Node1->ID == node1->ID && c->Node2->ID == node2 || c->Node1->ID == node2 && c->Node2->ID == node1->ID;
+							   });
+		if (it == node1->Channels.end())
+			return nullptr;
+		return *it;
+	}
+
+	bool Simulation::TransmitPacket(const Packet& packet, NetworkNode* transitionNode, double& time, float errorOverride /*= -1.f*/)
+	{
+
+		int32 nextHop = transitionNode->RoutingTable[packet.DestinationNode].NextHopID;
+		if (nextHop < 0)
+			return false;
+
+		Channel* channel = FindChannel(transitionNode, nextHop);
+		if (!channel)
+			return false;
+
+		float transmissionRate = 10000000.f;
+		if (channel->Type == EChannelType::HalfDuplex && packet.Protocol == ENetworkProtocol::TCP)
+			transmissionRate *= 0.5f;
+		time += (float)(packet.PayloadSize + packet.ServiceSize) * (float)channel->Weight / transmissionRate;
+
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+
+		float errror = errorOverride;
+		if (errorOverride == -1.f)
+			errror = channel->ErrorProbability;
+
+		if (dist(gen) < errror)
+			return true;
+
+		if (nextHop == packet.DestinationNode)
+			return true;
+
+		NetworkNode* nextNode = FindNode(nextHop);
+		if (!nextNode)
+			return false;
+
+		if (errorOverride != -1.f)
+			return TransmitPacket(packet, nextNode, time, errorOverride);
+		return TransmitPacket(packet, nextNode, time);
+	}
+
+	PacketTransmissionSpecifications::PacketTransmissionSpecifications(const PacketTransmissionSettings& settings, std::vector<UniquePtr<NetworkNode>>* nodes)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+
+		Protocol = settings.Protocol;
+		SourceNode = settings.SourceNode;
+		DestinationNode = settings.DestinationNode;
+		MessageSize = settings.MessageSize;
+		MTU = settings.MTU;
+
+
+
+		if (settings.bRandomProtocol)
+		{
+			std::uniform_int_distribution<> dis(0, 1);
+			Protocol = ToENetworkProtocol(dis(gen));
+		}
+
+		if (settings.bRandomSourceNode)
+		{
+			std::uniform_int_distribution<> dis(0, nodes->size() - 1);
+			SourceNode = nodes->operator[](dis(gen))->ID;
+		}
+
+		if (settings.bRandomDestinationNode)
+		{
+			std::uniform_int_distribution<> dis(0, nodes->size() - 1);
+			DestinationNode = nodes->operator[](dis(gen))->ID;
+			while (nodes->size() > 1 && DestinationNode == SourceNode)
+				DestinationNode = nodes->operator[](dis(gen))->ID;
+		}
+
+		if (settings.bRandomMessageSize)
+		{
+			std::uniform_int_distribution<> dis(500, 10000000);
+			MessageSize = dis(gen);
+		}
+	}
+
 }

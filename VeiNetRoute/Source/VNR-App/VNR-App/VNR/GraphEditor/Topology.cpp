@@ -198,8 +198,8 @@ namespace VNR
 		}
 		ImGui::PopFont();
 		
-		ImVec2 sliderSize =  ImGui::GetContentRegionAvail() - ImGui::CalcTextSize("Error Probability");
-		ImGui::PushItemWidth(sliderSize.x);
+		int32 sliderSize = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize("Error Probability").x - 10;
+		ImGui::PushItemWidth(sliderSize);
 
 		if (ImGui::SliderInt2("Error Probability", m_TopologyData.ErrorRange, 0, 100, "%d%%"))
 		{

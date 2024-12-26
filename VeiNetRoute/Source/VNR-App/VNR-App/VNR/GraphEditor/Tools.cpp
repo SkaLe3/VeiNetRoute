@@ -30,13 +30,20 @@ namespace VNR
 	void Tools::Draw()
 	{
 		static float fakeTimer = 10;
-		ImGui::Text("Synchronization Update Timer");
-		ImGui::SameLine();
+		//ImGui::Text("Synchronization Update Timer");
+		//ImGui::SameLine();
 		ImGui::SetNextItemWidth(100);
 		if (m_AppLayer->GetNetworkRef())
 			ImGui::SliderFloat("##Synchronization Update Timer", &m_AppLayer->GetNetworkRef()->SynchronizationTimer, 1.f, 30.f, "%.1f");
 		else
 			ImGui::SliderFloat("##Synchronization Update Timer", &fakeTimer, 1.f, 30.f, "%.1f");
+
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Synchronization Update Timer");
+			ImGui::EndTooltip();
+		}
 
 		ImGui::SameLine();
 
@@ -48,9 +55,21 @@ namespace VNR
 		ImGui::SameLine(0, 20);
 		if (!m_Nodes)
 			return;
-		NodeSelector("Source", &m_SourceNodeID, 80);
+		NodeSelector("##Source", &m_SourceNodeID, 90);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Source Node ID");
+			ImGui::EndTooltip();
+		}
 		ImGui::SameLine();
-		NodeSelector("Destination", &m_DestinationNodeID, 80);
+		NodeSelector("##Destination", &m_DestinationNodeID, 90);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Destination Node ID");
+			ImGui::EndTooltip();
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Find Shortest"))
 		{
