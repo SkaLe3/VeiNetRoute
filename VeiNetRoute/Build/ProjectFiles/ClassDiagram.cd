@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="m_Network ">
+    <Position X="22.265" Y="11.158" Height="0.291" Width="1.127" />
+  </Comment>
+  <Comment CommentText="RoutingTable&lt;Route&gt;">
+    <Position X="12.042" Y="8.868" Height="0.291" Width="1.589" />
+  </Comment>
+  <Comment CommentText="vector&lt;Edges&gt;">
+    <Position X="27.929" Y="6.206" Height="0.291" Width="1.03" />
+  </Comment>
+  <Comment CommentText="vector&lt;Nodes&gt;">
+    <Position X="27.801" Y="7.069" Height="0.291" Width="1.174" />
+  </Comment>
+  <Comment CommentText="Type">
+    <Position X="19.855" Y="5.141" Height="0.291" Width="1.03" />
+  </Comment>
+  <Comment CommentText="vector&lt;Channels&gt;">
+    <Position X="17.333" Y="8.632" Height="0.291" Width="1.229" />
+  </Comment>
+  <Comment CommentText="vector&lt;Result&gt;">
+    <Position X="25.052" Y="14.5" Height="0.291" Width="1.127" />
+  </Comment>
+  <Class Name="VNR::Canvas" Collapsed="true">
+    <Position X="25.75" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgoAAAAAAAAAQACgAAAFAAgQAgAAkACQIAIDABgEAAI=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Canvas.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_View" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VNR::GraphEditor">
+    <Position X="29.25" Y="5.25" Width="1.5" />
+    <AssociationLine Name="m_Topology" Type="VNR::TopologyData" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="29.25" Y="9.332" />
+        <Point X="24.615" Y="9.332" Type="JumpStart" />
+        <Point X="24.448" Y="9.332" Type="JumpEnd" />
+        <Point X="19.125" Y="9.332" />
+        <Point X="19.125" Y="13.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQUQAAEiAAEAgEAGAAgAAAIAAAQAAAIJAAEEAEIAQA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\GraphEditor.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_Canvas" />
+      <Field Name="m_Topology" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VNR::Network">
+    <Position X="20.5" Y="10" Width="1.5" />
+    <AssociationLine Name="m_TopologyData" Type="VNR::TopologyData">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.392" Y="0.467" Height="0.182" Width="1.268" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QQAgAAACBAAAIAEAAAEAIEAAAAAAQAAAAAAAIAQIFAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\Network.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_TopologyData" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VNR::Properties" Collapsed="true">
+    <Position X="26.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAEAAEgAAAEQAAAAAAAAAAAAAIAAAAAACAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Properties.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VNR::Simulation">
+    <Position X="26.25" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAAAIAAgAAACABAAAAJAAAAAIAQAAAFAAAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Simulation.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_Settings" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VNR::Tools" Collapsed="true">
+    <Position X="26.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAAIAAgAAACASAAAAYAAAAAAAQAgAEAAAgAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Tools.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VNR::TopologySettigs" Collapsed="true">
+    <Position X="20.75" Y="14.5" Width="1.5" />
+    <AssociationLine Name="m_TopologyData" Type="VNR::TopologyData">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.188" Y="0.116" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgoAAAAAAQAAAhEAAAIKSEAAIAAgAAAIAAAAAACAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Topology.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_TopologyData" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VNR::VNRLayer">
+    <Position X="23.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAFgI8AAAAIIAAIAAMgAAgAAAEAQAAIAACBAAEAAEA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\VNRLayer.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_Editor" />
+      <Field Name="m_NetworkManager" />
+      <Field Name="m_Properties" />
+      <Field Name="m_Tools" />
+      <Field Name="m_Simulation" />
+      <Field Name="m_Topology" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NetworkManager">
+    <Position X="15.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQCABAIAAgAAACgCAAAAAAAEAAAAAEBCgAAUAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\NetworkManager.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_NewChannel" />
+      <Field Name="m_NewNode" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="VNR::CanvasView">
+    <Position X="23.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAABAAAAAIAAAAAAAAAAAAAABAAAAgAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Canvas.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VNR::Channel">
+    <Position X="18.25" Y="3.5" Width="1.5" />
+    <AssociationLine Name="Node1" Type="VNR::NetworkNode" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18.594" Y="6.209" />
+        <Point X="18.594" Y="6.584" />
+        <Point X="17" Y="6.584" />
+        <Point X="17" Y="7.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.777" Y="0.126" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgQABBAEAAAgAgAAACACAAAAAAAQAAAABAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\Channel.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Node1" />
+      <Field Name="Node2" />
+      <Field Name="Visuals" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="VNR::ChannelData" Collapsed="true">
+    <Position X="13" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAACAAAAAAAQAAAABAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\Channel.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Type" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="VNR::Delta">
+    <Position X="13" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\DeltaRouting.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Type" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="VNR::Edge">
+    <Position X="21.25" Y="3.5" Width="1.5" />
+    <AssociationLine Name="Node1" Type="VNR::Node" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="22.125" Y="3.5" />
+        <Point X="22.125" Y="2.78" />
+        <Point X="14.062" Y="2.78" />
+        <Point X="14.062" Y="3.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Node2" Type="VNR::Node" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="21.812" Y="3.5" />
+        <Point X="21.812" Y="3.125" />
+        <Point X="14.562" Y="3.125" />
+        <Point X="14.562" Y="3.5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAABBAAAIAAAgAAAAAAAABBAAAAAAAAAAQAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Edge.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Data" />
+      <Field Name="Node1" />
+      <Field Name="Node2" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="VNR::NetworkNode">
+    <Position X="15.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgEAAAgAAAAACAAAAAAAAAAAIAIAAEAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\NetworkNode.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Visuals" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="VNR::NetworkNodeData" Collapsed="true">
+    <Position X="13" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\NetworkNode.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VNR::Node">
+    <Position X="13.25" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAgIAQAAAAAAAIAoAAAAAAAEAAIAABgAAAAAAA2AQAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Node.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Data" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="VNR::Packet" Collapsed="true">
+    <Position X="28.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAQAAAAABAAAAAAAAAAAAAAAAgAAI=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Simulation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VNR::PacketTransmissionResult" Collapsed="true">
+    <Position X="23.5" Y="15.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAgQAAAACBAEgAAAAAAAAAAAACgAII=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Simulation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VNR::PacketTransmissionSettings" Collapsed="true">
+    <Position X="28.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>qAAAAAEAAAAQAIAAAAAAAABgAAIAIAAAAAAAAAAgAAI=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Simulation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VNR::PacketTransmissionSpecifications" Collapsed="true">
+    <Position X="28.75" Y="13.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAEAAAAAAAAAAIAAQAAAAABgAAAAAAAAAAAAAAAgAAI=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Simulation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VNR::Route">
+    <Position X="13" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAABAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\DeltaRouting.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VNR::TopologyData">
+    <Position X="18.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAIAAAAAAIAAAAAAAAAAAAEAAAAAAAEA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\TopologyData.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VNR::TransmitInfo" Collapsed="true">
+    <Position X="28.75" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\GraphEditor\Simulation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="VNR::EChannelType" Collapsed="true">
+    <Position X="13" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\Channel.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="VNR::EDeltaType" Collapsed="true">
+    <Position X="15.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAoAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\KPI\7semester\CompNetworks\CourseProject\VeiNetRoute\VeiNetRoute\Source\VNR-App\VNR-App\VNR\Network\DeltaRouting.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
